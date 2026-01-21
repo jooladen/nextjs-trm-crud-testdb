@@ -1,0 +1,2 @@
+# Database
+DATABASE_URL="postgresql://prisma_user_4:prisma_password_4@localhost:5434/prisma_crud_db_4?schema=public"

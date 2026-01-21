@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category_System {
+  category_id    Int     @id
+  category_level Int
+  tech_name      String
+  link_id        Int?
+
+  parent   Category_System? @relation("CategoryTree", fields: [link_id], references: [category_id])
+  children Category_System[] @relation("CategoryTree")
+
+  techPlans Tech_Secure_Plan[]
+}
+
+model Tech_Secure_Plan {
+  plan_key        Int    @id @default(autoincrement())
+  category_id     Int
+  tech_plan_name  String
+
+  category Category_System @relation(fields: [category_id], references: [category_id])
+  productLineMaps Target_product_line_plan_map[]
+}
+
+model Target_Product_Line {
+  target_product_line_id Int    @id @default(autoincrement())
+  target_division        String
+  target_product_line    String
+
+  products Target_product[]
+  planMaps Target_product_line_plan_map[]
+}
+
+model Target_product {
+  target_product_id      Int    @id @default(autoincrement())
+  target_product_line_id Int
+  target_product_name    String
+  deployment_date        DateTime
+
+  productLine Target_Product_Line @relation(fields: [target_product_line_id], references: [target_product_line_id])
+}
+
+model Target_product_line_plan_map {
+  target_product_line_id Int
+  plan_key               Int
+
+  productLine Target_Product_Line @relation(fields: [target_product_line_id], references: [target_product_line_id])
+  plan        Tech_Secure_Plan     @relation(fields: [plan_key], references: [plan_key])
+
+  @@id([target_product_line_id, plan_key])
+}
