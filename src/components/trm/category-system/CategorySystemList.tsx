@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import DataTable, { Column, DataTableAction } from '../common/DataTable';
 import { CategorySystemListItemDto } from '@/lib/types/categorySystem.types';
 import { ROUTES } from '@/lib/constants/routes';
+import { useOptimisticDelete } from '@/lib/hooks/useOptimisticDelete';
 
 interface CategorySystemListProps {
   initialData: CategorySystemListItemDto[];
@@ -12,28 +12,14 @@ interface CategorySystemListProps {
 
 export default function CategorySystemList({ initialData }: CategorySystemListProps) {
   const [categories, setCategories] = useState(initialData);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const router = useRouter();
 
-  const handleDelete = async (cat: CategorySystemListItemDto) => {
-    if (!confirm(`"${cat.tech_name}"을(를) 삭제하시겠습니까?`)) return;
-
-    try {
-      setIsDeleting(true);
-      const response = await fetch(ROUTES.API.CATEGORY_SYSTEM.BY_ID(cat.category_id), { method: 'DELETE' });
-      const result = await response.json();
-
-      if (!result.success) throw new Error(result.error || '삭제에 실패했습니다');
-
-      setCategories((prev) => prev.filter((c) => c.category_id !== cat.category_id));
-      alert('삭제되었습니다');
-      router.refresh();
-    } catch (error) {
-      alert(error instanceof Error ? error.message : '삭제 중 오류가 발생했습니다');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+  const { handleDelete, isPending, isDeleting } = useOptimisticDelete({
+    items: categories,
+    setItems: setCategories,
+    getItemId: (cat) => cat.category_id,
+    getItemName: (cat) => cat.tech_name,
+    deleteEndpoint: (cat) => ROUTES.API.CATEGORY_SYSTEM.BY_ID(cat.category_id),
+  });
 
   const columns: Column<CategorySystemListItemDto>[] = [
     { key: 'category_id', label: 'ID' },
@@ -51,7 +37,9 @@ export default function CategorySystemList({ initialData }: CategorySystemListPr
 
   return (
     <div>
-      <DataTable columns={columns} data={categories} actions={actions} emptyMessage="등록된 카테고리가 없습니다" getRowKey={(c) => c.category_id} />
+      <div className={isPending ? 'opacity-70 pointer-events-none' : ''}>
+        <DataTable columns={columns} data={categories} actions={actions} emptyMessage="등록된 카테고리가 없습니다" getRowKey={(c) => c.category_id} />
+      </div>
       {isDeleting && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 shadow-xl"><p className="text-gray-900">삭제 중...</p></div>

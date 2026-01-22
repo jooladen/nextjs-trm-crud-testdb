@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { targetProductLineService } from '@/lib/services/targetProductLine.service';
 import TargetProductLineList from '@/components/trm/target-product-lines/TargetProductLineList';
 import { ROUTES } from '@/lib/constants/routes';
+import { serverFetch } from '@/lib/utils/serverFetch';
+import { TargetProductLineListItemDto } from '@/lib/types/targetProductLine.types';
 
 export const metadata = {
   title: '타겟제품군 라인 | TRM',
@@ -9,7 +10,10 @@ export const metadata = {
 };
 
 export default async function TargetProductLinesPage() {
-  const productLines = await targetProductLineService.findAll();
+  // API 라우트를 통해 데이터 fetch
+  const productLines = await serverFetch<TargetProductLineListItemDto[]>(
+    ROUTES.API.TARGET_PRODUCT_LINES.BASE
+  );
 
   return (
     <div>

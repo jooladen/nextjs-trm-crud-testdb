@@ -17,13 +17,18 @@ import { CreateTargetProductDto } from '@/lib/types/targetProduct.types';
 
 /**
  * GET /api/target-products
- * 모든 타겟제품군 조회
+ * 모든 타겟제품 조회
  */
 export async function GET() {
   try {
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [API] GET /api/target-products");
+
     const products = await targetProductService.findAll();
+    console.log(`[API] Fetched ${products.length} target products`);
+
     return successResponse(products);
   } catch (error) {
+    console.error('[API] Error fetching target products:', error);
     return errorResponse(handlePrismaError(error));
   }
 }

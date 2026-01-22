@@ -1,14 +1,18 @@
 import Link from 'next/link';
-import { productLinePlanMapService } from '@/lib/services/productLinePlanMap.service';
 import ProductLinePlanMapList from '@/components/trm/product-line-plan-map/ProductLinePlanMapList';
 import { ROUTES } from '@/lib/constants/routes';
+import { serverFetch } from '@/lib/utils/serverFetch';
+import { ProductLinePlanMapListItemDto } from '@/lib/types/productLinePlanMap.types';
 
 export const metadata = {
   title: '제품군-계획 매핑 | TRM',
 };
 
 export default async function ProductLinePlanMapPage() {
-  const maps = await productLinePlanMapService.findAll();
+  // API 라우트를 통해 데이터 fetch
+  const maps = await serverFetch<ProductLinePlanMapListItemDto[]>(
+    ROUTES.API.PRODUCT_LINE_PLAN_MAP.BASE
+  );
 
   return (
     <div>

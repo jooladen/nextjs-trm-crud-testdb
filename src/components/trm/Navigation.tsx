@@ -17,7 +17,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: '타겟제품군',
+    label: '타겟제품',
     href: ROUTES.TRM.TARGET_PRODUCTS.LIST,
     enabled: true,
   },
@@ -27,17 +27,17 @@ const navItems: NavItem[] = [
     enabled: true,
   },
   {
-    label: '타겟제품군 라인',
+    label: '타겟제품군',
     href: ROUTES.TRM.TARGET_PRODUCT_LINES.LIST,
     enabled: true,
   },
   {
-    label: '카테고리 시스템',
+    label: '분류',
     href: ROUTES.TRM.CATEGORY_SYSTEM.LIST,
     enabled: true,
   },
   {
-    label: '제품군-계획 매핑',
+    label: '타겟제품군-기술확보계획 매핑',
     href: ROUTES.TRM.PRODUCT_LINE_PLAN_MAP.LIST,
     enabled: true,
   },

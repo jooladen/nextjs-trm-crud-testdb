@@ -97,7 +97,7 @@ export default async function Home() {
               href="/trm/target-products"
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
             >
-              📦 타겟제품군
+              📦 타겟제품
             </Link>
             <Link
               href="/trm/tech-secure-plans"
@@ -109,19 +109,19 @@ export default async function Home() {
               href="/trm/target-product-lines"
               className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
             >
-              📊 타겟제품군 라인
+              📊 타겟제품군
             </Link>
             <Link
               href="/trm/category-system"
               className="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
             >
-              🗂️ 카테고리 시스템
+              🗂️ 분류
             </Link>
             <Link
               href="/trm/product-line-plan-map"
               className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-lg hover:shadow-xl"
             >
-              🔗 제품군-계획 매핑
+              🔗 타겟제품군-기술확보계획 매핑
             </Link>
           </div>
         </div>

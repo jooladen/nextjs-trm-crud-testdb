@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { categorySystemService } from '@/lib/services/categorySystem.service';
 import CategorySystemList from '@/components/trm/category-system/CategorySystemList';
 import { ROUTES } from '@/lib/constants/routes';
+import { serverFetch } from '@/lib/utils/serverFetch';
+import { CategorySystemListItemDto } from '@/lib/types/categorySystem.types';
 
 export const metadata = {
   title: '카테고리 시스템 | TRM',
@@ -9,7 +10,10 @@ export const metadata = {
 };
 
 export default async function CategorySystemPage() {
-  const categories = await categorySystemService.findAll();
+  // API 라우트를 통해 데이터 fetch
+  const categories = await serverFetch<CategorySystemListItemDto[]>(
+    ROUTES.API.CATEGORY_SYSTEM.BASE
+  );
 
   return (
     <div>

@@ -1,5 +1,5 @@
 /**
- * 타겟제품군 라인 API 엔드포인트
+ * 타겟제품군 API 엔드포인트
  */
 
 import { NextRequest } from 'next/server';

@@ -4,9 +4,10 @@
  */
 
 import Link from 'next/link';
-import { techSecurePlanService } from '@/lib/services/techSecurePlan.service';
 import TechSecurePlanList from '@/components/trm/tech-secure-plans/TechSecurePlanList';
 import { ROUTES } from '@/lib/constants/routes';
+import { serverFetch } from '@/lib/utils/serverFetch';
+import { TechSecurePlanListItemDto } from '@/lib/types/techSecurePlan.types';
 
 export const metadata = {
   title: '기술확보계획 목록 | TRM',
@@ -14,8 +15,10 @@ export const metadata = {
 };
 
 export default async function TechSecurePlansPage() {
-  // 서버에서 데이터 fetch
-  const plans = await techSecurePlanService.findAll();
+  // API 라우트를 통해 데이터 fetch
+  const plans = await serverFetch<TechSecurePlanListItemDto[]>(
+    ROUTES.API.TECH_SECURE_PLANS.BASE
+  );
 
   return (
     <div>

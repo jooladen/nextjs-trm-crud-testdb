@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import DataTable, { Column, DataTableAction } from '../common/DataTable';
 import { TargetProductLineListItemDto } from '@/lib/types/targetProductLine.types';
 import { ROUTES } from '@/lib/constants/routes';
+import { useOptimisticDelete } from '@/lib/hooks/useOptimisticDelete';
 
 interface TargetProductLineListProps {
   initialData: TargetProductLineListItemDto[];
@@ -12,40 +12,14 @@ interface TargetProductLineListProps {
 
 export default function TargetProductLineList({ initialData }: TargetProductLineListProps) {
   const [productLines, setProductLines] = useState(initialData);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const router = useRouter();
 
-  const handleDelete = async (line: TargetProductLineListItemDto) => {
-    if (!confirm(`"${line.target_product_line}"을(를) 삭제하시겠습니까?`)) {
-      return;
-    }
-
-    try {
-      setIsDeleting(true);
-
-      const response = await fetch(
-        ROUTES.API.TARGET_PRODUCT_LINES.BY_ID(line.target_product_line_id),
-        { method: 'DELETE' }
-      );
-
-      const result = await response.json();
-
-      if (!result.success) {
-        throw new Error(result.error || '삭제에 실패했습니다');
-      }
-
-      setProductLines((prev) =>
-        prev.filter((p) => p.target_product_line_id !== line.target_product_line_id)
-      );
-
-      alert('삭제되었습니다');
-      router.refresh();
-    } catch (error) {
-      alert(error instanceof Error ? error.message : '삭제 중 오류가 발생했습니다');
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+  const { handleDelete, isPending, isDeleting } = useOptimisticDelete({
+    items: productLines,
+    setItems: setProductLines,
+    getItemId: (line) => line.target_product_line_id,
+    getItemName: (line) => line.target_product_line,
+    deleteEndpoint: (line) => ROUTES.API.TARGET_PRODUCT_LINES.BY_ID(line.target_product_line_id),
+  });
 
   const columns: Column<TargetProductLineListItemDto>[] = [
     { key: 'target_product_line_id', label: 'ID' },
@@ -65,13 +39,15 @@ export default function TargetProductLineList({ initialData }: TargetProductLine
 
   return (
     <div>
-      <DataTable
-        columns={columns}
-        data={productLines}
-        actions={actions}
-        emptyMessage="등록된 제품군 라인이 없습니다"
-        getRowKey={(line) => line.target_product_line_id}
-      />
+      <div className={isPending ? 'opacity-70 pointer-events-none' : ''}>
+        <DataTable
+          columns={columns}
+          data={productLines}
+          actions={actions}
+          emptyMessage="등록된 제품군 라인이 없습니다"
+          getRowKey={(line) => line.target_product_line_id}
+        />
+      </div>
 
       {isDeleting && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
