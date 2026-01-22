@@ -74,7 +74,7 @@ export default function TargetProductForm({
 
       alert(mode === 'create' ? '생성되었습니다' : '수정되었습니다');
       router.push(ROUTES.TRM.TARGET_PRODUCTS.LIST);
-      router.refresh();
+      // router.refresh() 제거: push()가 자동으로 Server Component 재실행
     } catch (err) {
       setError(err instanceof Error ? err.message : '오류가 발생했습니다');
     } finally {

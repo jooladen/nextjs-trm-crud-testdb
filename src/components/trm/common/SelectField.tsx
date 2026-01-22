@@ -2,7 +2,8 @@
 
 /**
  * 외래키 선택을 위한 드롭다운 필드 컴포넌트
- * API에서 참조 데이터를 fetch하여 표시합니다
+ * - API에서 참조 데이터를 1회만 fetch
+ * - formatLabel 변경 시 불필요한 재fetch 방지
  */
 
 import { useEffect, useState } from 'react';
@@ -62,7 +63,9 @@ export default function SelectField({
     }
 
     fetchOptions();
-  }, [apiEndpoint, formatLabel]);
+    // formatLabel 제거: 표시 로직은 데이터 fetching과 독립적
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiEndpoint]);
 
   return (
     <div className="mb-4">

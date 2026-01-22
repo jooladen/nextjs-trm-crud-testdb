@@ -1,0 +1,1 @@
+del \\.\C:\Users\jooladen\Desktop\nextjs-trm-crud-testdb\nul

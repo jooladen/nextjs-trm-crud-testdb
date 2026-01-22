@@ -1,8 +1,9 @@
 /**
  * 최적화된 삭제 훅
  * - useTransition으로 부드러운 전환
- * - Optimistic update + server refresh
- * - 에러 시 자동 복구
+ * - Optimistic update로 즉각적인 UI 반응
+ * - 에러 시에만 server refresh로 데이터 복구
+ * - 스크롤 위치 자동 보존
  */
 import { useTransition, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -54,10 +55,11 @@ export function useOptimisticDelete<T>({
         throw new Error(result.error || '삭제에 실패했습니다');
       }
 
-      // Optimistic Update + Server Refresh (부드럽게)
+      // Optimistic Update (낙관적 업데이트)
       startTransition(() => {
         setItems((prev) => prev.filter((i) => getItemId(i) !== itemId));
-        router.refresh();
+        // router.refresh() 제거: 낙관적 업데이트만으로 충분
+        // 다음 페이지 이동 시 자동으로 최신 데이터 fetch됨
       });
 
       alert('삭제되었습니다');
@@ -67,7 +69,8 @@ export function useOptimisticDelete<T>({
           ? error.message
           : '삭제 중 오류가 발생했습니다'
       );
-      router.refresh();  // 에러 시 서버 데이터로 복구
+      // 에러 시에만 서버 데이터로 복구
+      router.refresh();
     } finally {
       setIsDeleting(false);
     }
